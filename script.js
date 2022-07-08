@@ -28,12 +28,23 @@ buttons.forEach((button) => {
         case 'divide':
           currentOperator = divide;
         break;
+
+        case 'operator':
+          currentOperator = clear;
+        break;
       }
       previousVal = display.textContent;
       currentVal = '';
     }
     else if(e.target.id === 'equal'){
       display.textContent = `${operate(currentOperator, previousVal, currentVal)}`;
+    }
+
+    else if (e.target.id === 'clear'){
+      currentVal = '';
+      previousVal = '';
+      currentOperator = '';
+      display.textContent = currentVal;
     }
   });
 });
