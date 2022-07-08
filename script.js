@@ -2,7 +2,8 @@ const buttons = document.querySelectorAll('button');
 const display = document.querySelector(".screen>p");
 
 let currentVal = '';
-let previousVal = '0';
+let previousVal = '';
+let currentOperator = '';
 
 buttons.forEach((button) => {
   button.addEventListener('click', (e)=>{
@@ -11,23 +12,40 @@ buttons.forEach((button) => {
       display.textContent = currentVal;
     }
     else if(e.target.className === 'operator'){
+      switch(e.target.id){
+        case 'add':
+          currentOperator = add;
+        break;
+
+        case 'substract':
+          currentOperator = substract;
+        break;
+
+        case 'multiply':
+          currentOperator = multiply;
+        break;
+
+        case 'divide':
+          currentOperator = divide;
+        break;
+      }
       previousVal = display.textContent;
       currentVal = '';
     }
     else if(e.target.id === 'equal'){
-      display.textContent = `${add(previousVal, currentVal)}`;
+      display.textContent = `${operate(currentOperator, previousVal, currentVal)}`;
     }
   });
 });
 
-
-const add = (a, b) => a + b;
-const substract = (a, b) => a - b;
-const multiply = (a, b) => a * b;
-const divide = (a, b) => b !== 0 ? a / b : 'Error';
 
 function operate(operator, a, b){
   if(a === '' ) a = '0';
   if(b === '' ) b = '0';
   return operator(parseInt(a), parseInt(b));
 }
+
+const add = (a, b) => a + b;
+const substract = (a, b) => a - b;
+const multiply = (a, b) => a * b;
+const divide = (a, b) => b !== 0 ? a / b : 'Error';
