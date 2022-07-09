@@ -1,62 +1,88 @@
-const buttons = document.querySelectorAll('button');
-const display = document.querySelector(".screen>p");
+const numbers = document.querySelectorAll('.num');
+const operators = document.querySelectorAll('.operator');
+const displayRes = document.querySelector('.result');
+const displayOp = document.querySelector('.operation');
+const clear = document.querySelector('#clear');
+const equal = document.querySelector('#equal');
+const erase = document.querySelector('#erase');
 
 let currentVal = '';
 let previousVal = '';
-let currentOperator = '';
+let operation = undefined;
 
-buttons.forEach((button) => {
-  button.addEventListener('click', (e)=>{
-    if(e.target.className === 'num'){
-      currentVal += e.target.id;
-      display.textContent = currentVal;
+erase.addEventListener('click', (e) => {
+  currentVal = currentVal.slice(0, -1);
+  console.log(currentVal);
+  displayRes.textContent = currentVal;
+});
+
+clear.addEventListener('click', () => {
+  currentVal = '';
+  previousVa = '';
+  operation = undefined;
+  displayRes.textContent = currentVal;
+});
+
+numbers.forEach(button => {
+  button.addEventListener('click', e =>{
+    if(e.target.id === '.' && currentVal.includes('.')) return;
+    currentVal += e.target.id;
+    displayRes.textContent = currentVal;
+  });
+});
+
+operators.forEach(button => {
+  button.addEventListener('click', e => {
+    if(currentVal === '') return;
+    if(previousVal !== ''){
+      let res;
+      if(currentVal === '') return;
+        res = operate(operation, currentVal, previousVal);
+        currentVal = res;
+        operation = undefined;
+        previousVal = '';
     }
-    else if(e.target.className === 'operator'){
-      switch(e.target.id){
-        case 'add':
-          currentOperator = add;
-        break;
+    switch(e.target.id){
+      case 'add':
+        operation = add;
+      break;
 
-        case 'substract':
-          currentOperator = substract;
-        break;
+      case 'substract':
+        operation = substract;
+      break;
 
-        case 'multiply':
-          currentOperator = multiply;
-        break;
+      case 'multiply':
+        operation = multiply;
+      break;
 
-        case 'divide':
-          currentOperator = divide;
-        break;
-
-        case 'operator':
-          currentOperator = clear;
-        break;
-      }
-      previousVal = display.textContent;
-      currentVal = '';
+      case 'divide':
+        operation = divide;
+      break;
     }
-    else if(e.target.id === 'equal'){
-      display.textContent = `${operate(currentOperator, previousVal, currentVal)}`;
-    }
-
-    else if (e.target.id === 'clear'){
-      currentVal = '';
-      previousVal = '';
-      currentOperator = '';
-      display.textContent = currentVal;
-    }
+    previousVal = currentVal;
+    currentVal = '';
+    displayRes.textContent = previousVal;
   });
 });
 
 
+equal.addEventListener('click', (e) => {
+
+  let res;
+  if(previousVal === '' || currentVal === '') return;
+  res = operate(operation, currentVal, previousVal);
+  currentVal = res;
+  operation = undefined;
+  previousVal = '';
+  displayRes.textContent = currentVal;
+});
+
 function operate(operator, a, b){
-  if(a === '' ) a = '0';
-  if(b === '' ) b = '0';
-  return operator(parseInt(a), parseInt(b));
+  return operator(parseFloat(a), parseFloat(b)).toFixed(2);
 }
 
 const add = (a, b) => a + b;
 const substract = (a, b) => a - b;
 const multiply = (a, b) => a * b;
-const divide = (a, b) => b !== 0 ? a / b : 'Error';
+const divide = (a, b) => b === 0 ? 'Error' : b/a; 
+
