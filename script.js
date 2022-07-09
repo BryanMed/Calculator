@@ -25,8 +25,8 @@ clear.addEventListener('click', () => {
 
 numbers.forEach(button => {
   button.addEventListener('click', e =>{
-    if(e.target.id === '.' && currentVal.includes('.')) return;
-    currentVal += e.target.id;
+    if(e.target.value === '.' && currentVal.includes('.')) return;
+    currentVal += e.target.value;
     displayRes.textContent = currentVal;
   });
 });
